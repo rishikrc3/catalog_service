@@ -14,8 +14,14 @@ def add_track():
         return jsonify({"error": "Missing title or artist"}), 400
 
     track_id = repo.insert(title, artist)
-    
+
     return jsonify({"message": "Track added", "track_id": track_id}), 201
+
+
+@app.route("/tracks", methods=["GET"])
+def get_tracks():
+    tracks = repo.get()
+    return jsonify(tracks), 200
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5001, debug=True)
