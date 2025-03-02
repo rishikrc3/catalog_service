@@ -23,3 +23,10 @@ class Repository:
             cursor = connection.cursor()
             cursor.execute("SELECT id, title, artist FROM tracks")
             return cursor.fetchall()
+        
+    def delete_track(self, track_id):  
+        with sqlite3.connect(self.database) as connection:
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM tracks WHERE id = ?", (track_id,))
+            connection.commit()
+            return cursor.rowcount > 0  

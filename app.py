@@ -23,5 +23,13 @@ def get_tracks():
     tracks = repo.get()
     return jsonify(tracks), 200
 
+@app.route("/tracks/<int:track_id>", methods=["DELETE"])
+def delete_track(track_id):
+    if repo.delete_track(track_id):
+        return jsonify({"message": "Track deleted"}), 200
+    else:
+        return jsonify({"error": "Track not found"}), 404
+
+
 if __name__ == "__main__":
     app.run(host="localhost", port=5001, debug=True)
