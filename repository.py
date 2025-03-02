@@ -30,3 +30,9 @@ class Repository:
             cursor.execute("DELETE FROM tracks WHERE id = ?", (track_id,))
             connection.commit()
             return cursor.rowcount > 0  
+    def find_track(self, title, artist):
+        with sqlite3.connect(self.database) as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT id FROM tracks WHERE title = ? AND artist = ?", (title, artist))
+            track = cursor.fetchone()
+            return track[0] if track else None  # Return track ID if found, else None

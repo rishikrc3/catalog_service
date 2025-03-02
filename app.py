@@ -30,6 +30,26 @@ def delete_track(track_id):
     else:
         return jsonify({"error": "Track not found"}), 404
 
+@app.route("/tracks/find", methods=["GET"])
+def find_track():
+    """Finds a track in the catalog by title and artist"""
+    title = request.args.get("title")
+    artist = request.args.get("artist")
+
+    if not title or not artist:
+        return jsonify({"error": "Missing title or artist"}), 400
+
+    track_id = repo.find_track(title, artist)
+
+    if track_id:
+        return jsonify({
+            "message": "Track found in catalog",
+            "track_id": track_id,
+        }), 200
+    else:
+        return jsonify({
+            "message": "Track not found in catalog",
+        }), 404
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5001, debug=True)
