@@ -22,12 +22,19 @@ def get_tracks():
     tracks = repo.get()
     return jsonify(tracks), 200
 
-# @app.route("/tracks/<int:track_id>", methods=["DELETE"])
-# def delete_track(track_id):
-#     if repo.delete_track(track_id):
-#         return jsonify({"message": "Track deleted"}), 200
-#     else:
-#         return jsonify({"error": "Track not found"}), 404
+@app.route("/tracks", methods=["DELETE"])
+def delete_track():
+    data = request.get_json()
+    if not data or "title" not in data or "artist" not in data:
+        return jsonify({"error": "Missing title or artist"}), 400
+
+    title = data["title"]
+    artist = data["artist"]
+
+    if repo.delete_track(title, artist):
+        return jsonify({"message": f"Track '{title}' by {artist} deleted"}), 200
+    else:
+        return jsonify({"error": f"Track '{title}' by {artist} not found"}), 404
 
 # @app.route("/tracks/find", methods=["GET"])
 # def find_track():

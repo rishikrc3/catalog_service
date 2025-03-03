@@ -24,12 +24,17 @@ class Repository:
             cursor.execute("SELECT id, title, artist FROM tracks")
             return cursor.fetchall()
         
-    # def delete_track(self, track_id):  
-    #     with sqlite3.connect(self.database) as connection:
-    #         cursor = connection.cursor()
-    #         cursor.execute("DELETE FROM tracks WHERE id = ?", (track_id,))
-    #         connection.commit()
-    #         return cursor.rowcount > 0  
+    def delete_track(self, title, artist):
+        with sqlite3.connect(self.database) as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT id FROM tracks WHERE title = ? AND artist = ?", (title, artist))
+            track = cursor.fetchone()
+            if not track:
+                return False  
+            cursor.execute("DELETE FROM tracks WHERE title = ? AND artist = ?", (title, artist))
+            connection.commit()
+            return True  
+
     # def find_track(self, title, artist):
     #     with sqlite3.connect(self.database) as connection:
     #         cursor = connection.cursor()
