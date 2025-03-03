@@ -40,14 +40,17 @@ class TestTrackCatalog(unittest.TestCase):
         self.assertEqual(delete_rsp.status_code, 404)
         self.assertIn("Track 'Nonexistent Song' by Unknown Artist not found", delete_rsp.json()["error"])
 
-    # def test_delete_track_success(self):
-    #     track = {"title": "Song to Delete", "artist": "Artist"}   
-    #     add_rsp = requests.post(BASE_URL, json=track)
-    #     track_id = add_rsp.json()["track_id"]
-    #     delete_url = f"{BASE_URL}/{track_id}"
-    #     rsp = requests.delete(delete_url)
-    #     self.assertEqual(rsp.status_code, 200)
-    #     self.assertIn("Track deleted", rsp.json()["message"])
+    def test_stream_audio_missing_fields(self):
+        missing_artist = {"title": "Blinding Lights"}
+        rsp = requests.post(f"{BASE_URL}/audio", json=missing_artist)
+        self.assertEqual(rsp.status_code, 400)
+        self.assertIn("error", rsp.json())
+        missing_title = {"artist": "The Weeknd"}
+        rsp = requests.post(f"{BASE_URL}/audio", json=missing_title)
+        self.assertEqual(rsp.status_code, 400)
+        self.assertIn("error", rsp.json())
+
+
 
     # def test_delete_track_not_found(self):
     #     delete_url = f"{BASE_URL}/99999"
