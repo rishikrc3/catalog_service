@@ -35,4 +35,4 @@ class Repository:
             cursor = connection.cursor()
             cursor.execute("SELECT id FROM tracks WHERE title = ? AND artist = ?", (title, artist))
             track = cursor.fetchone()
-            return track[0] if track else None  # Return track ID if found, else None
+            return track[0] if track else None  

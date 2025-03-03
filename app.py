@@ -9,12 +9,9 @@ def add_track():
     data = request.get_json()
     title = data.get("title")
     artist = data.get("artist")
-
     if not title or not artist:
         return jsonify({"error": "Missing title or artist"}), 400
-
     track_id = repo.insert(title, artist)
-
     return jsonify({"message": "Track added", "track_id": track_id}), 201
 
 
@@ -32,15 +29,11 @@ def delete_track(track_id):
 
 @app.route("/tracks/find", methods=["GET"])
 def find_track():
-    """Finds a track in the catalog by title and artist"""
     title = request.args.get("title")
     artist = request.args.get("artist")
-
     if not title or not artist:
         return jsonify({"error": "Missing title or artist"}), 400
-
     track_id = repo.find_track(title, artist)
-
     if track_id:
         return jsonify({
             "message": "Track found in catalog",
