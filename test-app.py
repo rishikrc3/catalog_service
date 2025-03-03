@@ -4,7 +4,6 @@ import unittest
 BASE_URL = "http://localhost:5001/tracks"
 
 class TestTrackCatalog(unittest.TestCase):
-
     def test_add_track_success(self):
         track = {"title": "Blinding Lights", "artist": "Weekend"}
         with open("/Users/rishik/Desktop/Catelogue/wavs/Blinding Lights.wav", "rb") as f:
@@ -49,6 +48,18 @@ class TestTrackCatalog(unittest.TestCase):
         rsp = requests.post(f"{BASE_URL}/audio", json=missing_title)
         self.assertEqual(rsp.status_code, 400)
         self.assertIn("error", rsp.json())
+    def test_stream_audio_success(self):
+        track = {"title": "Blinding Lights", "artist": "The Weeknd"}
+        with open("/Users/rishik/Desktop/Catelogue/wavs/Blinding Lights.wav", "rb") as f:
+            files = {"file": ("Blinding_Lights.wav", f, "audio/wav")}
+            add_rsp = requests.post(BASE_URL, data=track, files=files)
+        self.assertEqual(add_rsp.status_code, 201)
+        stream_rsp = requests.post(f"{BASE_URL}/audio", json=track)
+        self.assertEqual(stream_rsp.status_code, 200)
+        self.assertEqual(stream_rsp.headers["Content-Type"], "audio/wav")
+        self.assertGreater(len(stream_rsp.content), 0)  
+
+
 
 
 
