@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify , Response
 from repository import Repository  
 
 app = Flask(__name__)
@@ -52,6 +52,24 @@ def delete_track():
 #         return jsonify({
 #             "message": "Track not found in catalog",
 #         }), 404
+
+
+@app.route("/tracks/audio", methods=["POST"])
+def stream_audio():
+    data = request.get_json()
+    if not data or "title" not in data or "artist" not in data:
+        return jsonify({"error": "Missing title or artist"}), 400
+
+    title = data["title"]
+    artist = data["artist"]
+
+    
+    audio_data = repo.get_audio(title, artist)
+    if not audio_data:
+        return jsonify({"error": "Track not found"}), 404
+
+    
+    return Response(audio_data, mimetype="audio/wav")
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5001, debug=True)

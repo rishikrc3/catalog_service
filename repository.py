@@ -40,4 +40,11 @@ class Repository:
     #         cursor = connection.cursor()
     #         cursor.execute("SELECT id FROM tracks WHERE title = ? AND artist = ?", (title, artist))
     #         track = cursor.fetchone()
-    #         return track[0] if track else None  
+    #         return track[0] if track else None 
+    def get_audio(self, title, artist):
+        with sqlite3.connect(self.database) as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT audio FROM tracks WHERE title = ? AND artist = ?", (title, artist))
+            track = cursor.fetchone()
+            return track[0] if track else None
+
