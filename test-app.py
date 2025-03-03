@@ -48,6 +48,7 @@ class TestTrackCatalog(unittest.TestCase):
         rsp = requests.post(f"{BASE_URL}/audio", json=missing_title)
         self.assertEqual(rsp.status_code, 400)
         self.assertIn("error", rsp.json())
+
     def test_stream_audio_success(self):
         track = {"title": "Blinding Lights", "artist": "The Weeknd"}
         with open("/Users/rishik/Desktop/Catelogue/wavs/Blinding Lights.wav", "rb") as f:
@@ -58,11 +59,7 @@ class TestTrackCatalog(unittest.TestCase):
         self.assertEqual(stream_rsp.status_code, 200)
         self.assertEqual(stream_rsp.headers["Content-Type"], "audio/wav")
         self.assertGreater(len(stream_rsp.content), 0)  
-
-
-
-
-
+        
     # def test_delete_track_not_found(self):
     #     delete_url = f"{BASE_URL}/99999"
     #     rsp = requests.delete(delete_url)
