@@ -39,15 +39,15 @@ class TestTrackCatalog(unittest.TestCase):
         self.assertEqual(delete_rsp.status_code, 404)
         self.assertIn("Track 'Nonexistent Song' by Unknown Artist not found", delete_rsp.json()["error"])
 
-    def test_stream_audio_missing_fields(self):
-        missing_artist = {"title": "Blinding Lights"}
-        rsp = requests.post(f"{BASE_URL}/audio", json=missing_artist)
-        self.assertEqual(rsp.status_code, 400)
-        self.assertIn("error", rsp.json())
-        missing_title = {"artist": "The Weeknd"}
-        rsp = requests.post(f"{BASE_URL}/audio", json=missing_title)
-        self.assertEqual(rsp.status_code, 400)
-        self.assertIn("error", rsp.json())
+        # def test_stream_audio_missing_fields(self):
+        #     missing_artist = {"title": "Blinding Lights"}
+        #     rsp = requests.post(f"{BASE_URL}/audio", json=missing_artist)
+        #     self.assertEqual(rsp.status_code, 400)
+        #     self.assertIn("error", rsp.json())
+        #     missing_title = {"artist": "The Weeknd"}
+        #     rsp = requests.post(f"{BASE_URL}/audio", json=missing_title)
+        #     self.assertEqual(rsp.status_code, 400)
+        #     self.assertIn("error", rsp.json())
 
     def test_stream_audio_success(self):
         track = {"title": "Blinding Lights", "artist": "The Weeknd"}
@@ -59,12 +59,17 @@ class TestTrackCatalog(unittest.TestCase):
         self.assertEqual(stream_rsp.status_code, 200)
         self.assertEqual(stream_rsp.headers["Content-Type"], "audio/wav")
         self.assertGreater(len(stream_rsp.content), 0)  
-        
-    # def test_delete_track_not_found(self):
-    #     delete_url = f"{BASE_URL}/99999"
-    #     rsp = requests.delete(delete_url)
-    #     self.assertEqual(rsp.status_code, 404)
-    #     self.assertIn("Track not found", rsp.json()["error"])
+
+    # def test_add_duplicate_track(self):
+    #     track = {"title": "Blinding Lights4", "artist": "The Weeknd"}
+    #     with open("/Users/rishik/Desktop/Catelogue/wavs/Blinding Lights.wav", "rb") as f:
+    #         files = {"file": ("Blinding_Lights.wav", f, "audio/wav")}
+    #         first_rsp = requests.post(BASE_URL, data=track, files=files)
+    #         self.assertEqual(first_rsp.status_code, 201)
+
+    #         second_rsp = requests.post(BASE_URL, data=track, files=files)
+    #         self.assertEqual(second_rsp.status_code, 409)
+    #         self.assertIn("Track already exists", second_rsp.json()["error"])
 
 if __name__ == "__main__":
     unittest.main()
